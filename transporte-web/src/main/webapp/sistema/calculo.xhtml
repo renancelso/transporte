@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pt="http://java.sun.com/jsf/passthrough"
+	  xmlns:c="http://java.sun.com/jstl/core" class="gt-ie8 gt-ie9 not-ie">
+      
+<h:body>
+    <ui:composition template="template/padrao.xhtml">
+
+        <ui:define name="conteudo">
+        
+            <h:form id="formPrincipal">  
+               
+            	<p:messages id="messages1" closable="true" showDetail="false"/>       
+            	
+            	<p:panel header="Cálculo de custos" id="panelVeiculos">   
+            		
+            		<ui:repeat var="via" value="#{calculoCustosControl.listasVias}">            		
+	            		<h:panelGrid columns="2" columnClasses="coluna1,coluna2"> 
+		            		<h:outputText value="Distância em rodovia #{via.tipoVia}: " 
+		            					  style="font-weight: bold !important;"/>  
+		            		<h:panelGrid columns="3"> 	
+								<pe:inputNumber value="#{via.distanciaPercorrida}"
+												lang="pt-br" decimalPlaces="2" 
+												decimalSeparator="," 
+												thousandSeparator=".">
+								</pe:inputNumber>
+								<p:spacer width="5" />
+								<h:outputText value="  KM" style="font-weight: bold;"/>
+							</h:panelGrid>	
+						</h:panelGrid>
+					</ui:repeat>
+					
+					<p:spacer height="10"></p:spacer>
+					
+					<h:panelGrid columns="2" columnClasses="coluna1,coluna2"> 					
+						<h:outputText value="Veiculo utilizado: " />							
+						<h:selectOneMenu value="#{calculoCustosControl.veiculoUtilizado}">
+							<f:converter converterId="VeiculoConverter" />
+							<f:selectItem itemValue="" itemLabel="SELECIONE" noSelectionOption="true" />
+							<f:selectItems value="#{calculoCustosControl.listaVeiculos}" 
+										   var="veiculo" itemLabel="#{veiculo.tipoVeiculo}" />							
+						</h:selectOneMenu>						
+						
+						<h:outputText value="Carga transportada: " />	
+						<h:panelGrid columns="3"> 		
+							<h:inputText onkeypress="mascara(this, soNumeros)"
+										 value="#{calculoCustosControl.cargaTransportada}" 
+										 maxlength="10">									
+							</h:inputText>
+							<p:spacer width="5" />
+							<h:outputText value="  toneladas" style="font-weight: bold;"/>	
+						</h:panelGrid>
+						
+	            	</h:panelGrid>
+	            	
+	            	<p:spacer height="3"/>
+            		
+            		<p:panel style="border: 0px;">
+	            	
+		            	<p:commandButton value="Calcular Custo" update="@form" 
+		          						     id="btCalcularCustos" styleClass="signin-btn"
+											 style="font-weight: bold;"		
+											 action="#{calculoCustosControl.calcularCustos()}"																 
+											 onstart="PF('dialogProcessando').show();" 
+											 oncomplete="PF('dialogProcessando').hide();"									
+										     onsuccess="PF('dialogProcessando').hide();"
+									 		 onerror="PF('dialogProcessando').hide();"/> 								 		 
+						
+						<p:spacer width="15"/>	
+							 		 
+						<p:commandButton value="Limpar" update="@form" 
+	          						     id="btLimpar" styleClass="signin-btn"
+										 style="font-weight: bold;"
+										 action="#{calculoCustosControl.init()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/>             	            	
+            		</p:panel>
+            		
+            	</p:panel>
+            	
+            	<p:panel header="Resultado do cálculo de custos" id="panelResultado" rendered="#{calculoCustosControl.listaCalculoCustosDTO.size() > 0}">
+            	
+            		<h:panelGrid columns="2" columnClasses="coluna1,coluna2"> 
+            		
+            			<h:outputText value="Custo do transporte: " style="color: red;"/>
+            			<h:outputText value="#{calculoCustosControl.calculoCustosDTO.custoTransporte}" 
+            						  converter="dinheiro" style="color: red; font-weight: bold;"/>
+            		
+            			<h:outputText value="Veículo utilizado: " />
+            			<h:outputText value="#{calculoCustosControl.calculoCustosDTO.veiculoUtilizado.tipoVeiculo}" />
+            		
+            			<h:outputText value="Carga Transportada: " />
+            			<h:outputText value="#{calculoCustosControl.calculoCustosDTO.cargaTransportada} toneladas" />
+            			
+            		</h:panelGrid>
+            		
+            		<p:dataTable var="item" value="#{calculoCustosControl.listaCalculoCustosDTO}">            		            			            						        				 				        				 
+				        <p:subTable var="via" value="#{item.listaVias}">
+				            <f:facet name="header">
+				                <h:outputText value="Vias percorridas" />
+				            </f:facet>
+				            <p:column>					           
+				                <h:outputText value="#{via.tipoVia}"/>
+				            </p:column>	
+				            <p:column>
+				                <h:outputText value="#{via.distanciaPercorrida}" converter="decimal"/>
+				                <h:outputText value=" KM percorridos" />
+				            </p:column>				           
+				        </p:subTable>				        
+				    </p:dataTable>
+            	
+            	</p:panel>
+           				
+            </h:form>
+            
+        </ui:define>
+
+    </ui:composition>
+    
+</h:body>
+
+</html>

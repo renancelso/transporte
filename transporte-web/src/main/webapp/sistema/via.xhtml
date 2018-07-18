@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pt="http://java.sun.com/jsf/passthrough"
+	  xmlns:c="http://java.sun.com/jstl/core" class="gt-ie8 gt-ie9 not-ie">
+	        
+<h:body>
+    <ui:composition template="template/padrao.xhtml">
+
+        <ui:define name="conteudo">
+            <h:form id="formPrincipal"> 
+            	<p:messages id="messages1" closable="true" showDetail="false"/>       
+            	
+            	<p:panel header="Cadastro de Via" id="panelVia">            	
+            		<h:panelGrid columns="2" columnClasses="coluna1,coluna2">
+            		
+            			<h:outputText value="Tipo de Via: " style="font-weight: bold !important;"/>	                				
+						<h:inputText size="50" onkeyup="maiuscula(this)" id="tipoVia"
+									 value="#{viaControl.tipoVia}"/>  
+						
+						<h:outputText value="Custo do KM rodado: " style="font-weight: bold !important;"/>	                				
+						<pe:inputNumber id="valorKMRodado" value="#{viaControl.custoKM}"
+										lang="pt-br" decimalPlaces="2" 
+										decimalSeparator="," 
+										thousandSeparator=".">
+						</pe:inputNumber>	
+						
+            		</h:panelGrid>   
+            		
+            		<p:spacer height="3"/>
+            		
+            		<p:panel style="border: 0px;">
+            		
+	            		<p:commandButton value="Cadastrar Via" update="@form" 
+	          						     id="btCadastrar" styleClass="signin-btn"
+										 style="font-weight: bold;"		
+										 rendered="#{viaControl.viaSelecionada == null or viaControl.viaSelecionada.id == null}"
+										 action="#{viaControl.cadastrarVia()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+						<p:commandButton value="Alterar Via" update="@form" 
+	          						     id="btAlterar" styleClass="signin-btn"
+										 style="font-weight: bold;"		
+										 rendered="#{viaControl.viaSelecionada != null and viaControl.viaSelecionada.id != null}"
+										 action="#{viaControl.alterarVia()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+												
+						<p:spacer width="15"/>	
+							 		 
+						<p:commandButton value="Limpar" update="@form" 
+	          						     id="btLimpar" styleClass="signin-btn"
+										 style="font-weight: bold;"
+										 action="#{viaControl.init()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+								 		 
+						<p:spacer width="35"/>			 		 
+								 		 
+						<p:commandButton value="Excluir Via" update="@form" 
+	          						     id="btExcluir" styleClass="signin-btn"
+										 style="font-weight: bold; color: red;"		
+										 rendered="#{viaControl.viaSelecionada != null and viaControl.viaSelecionada.id != null}"
+										 action="#{viaControl.excluirVia()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+							 		 
+					</p:panel>
+					
+            	</p:panel>    
+            	
+            	<p:panel header="Vias Cadastradas" id="panelViasCadastradas">              	       
+	            	
+	            	<p:dataTable value="#{viaControl.listaVias}"
+								 id="tabelaViasCadastradas" paginator="true"  										  
+	                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+	                             currentPageReportTemplate="Exibindo de {startRecord} a {endRecord} de {totalRecords} - Página: {currentPage}/{totalPages}"
+	                             emptyMessage="Nenhum registro a ser exibido"
+	                             rowIndexVar="rowIndex" reflow="true" var="item" rows="10" 
+	                             rowsPerPageTemplate="10,20,30,40,50"
+	                             selection="#{viaControl.viaSelecionada}"
+	                             selectionMode="single"  rowKey="#{item.id}">   
+	                              	 	                      
+	                      <p:column style="width: 10%; text-align: left;" sortBy="#{item.tipoVia}">                        
+	                         <f:facet name="header">                           
+	                             <h:outputText value="Tipo de Via" />  
+	                         </f:facet>                          
+	                         <h:outputText value="#{item.tipoVia}" />  
+	                      </p:column>
+	                      
+	                      <p:column style="width: 10%; text-align: center;" sortBy="#{item.custoKM}">                        
+	                         <f:facet name="header">                           
+	                             <h:outputText value="Custo KM Percorrido" />  
+	                         </f:facet>                          
+	                         <h:outputText value="#{item.custoKM}"  converter="decimal"/>  
+	                      </p:column>
+	                                            
+	                      <p:column style="width: 8%; text-align: center;"> 
+		                     <p:commandLink title="Selecionar" update="@form" 
+		                     				style="color: red; text-decoration: underline;"
+		                     				value="Selecionar" action="#{viaControl.selecionar()}">
+			                 	<f:setPropertyActionListener value="#{item}" target="#{viaControl.viaSelecionada}" />	                      
+		                     </p:commandLink> 
+	                      </p:column>
+	                                    
+	                </p:dataTable>  
+                </p:panel>    
+            	 			
+            </h:form>
+            
+        </ui:define>
+
+    </ui:composition>
+    
+</h:body>
+
+</html>

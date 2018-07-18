@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pt="http://java.sun.com/jsf/passthrough"
+	  xmlns:c="http://java.sun.com/jstl/core" class="gt-ie8 gt-ie9 not-ie">
+	        
+<h:body>
+    <ui:composition template="template/padrao.xhtml">
+
+        <ui:define name="conteudo">
+        
+            <h:form id="formPrincipal"> 
+            
+            	<p:messages id="messages1" closable="true" showDetail="false"/>       
+            	
+            	<p:panel header="Cadastro de Veiculos" id="panelVeiculos">            	
+            		<h:panelGrid columns="2" columnClasses="coluna1,coluna2">
+            		
+            			<h:outputText value="Tipo de Veiculo: " style="font-weight: bold !important;"/>	                				
+						<h:inputText size="50" onkeyup="maiuscula(this)" id="tipoVeiculo"
+									 value="#{veiculoControl.tipoVeiculo}"/>  
+						
+						<h:outputText value="Fator multiplicador do custo: " style="font-weight: bold !important;"/>	                				
+						<pe:inputNumber id="fatorVeiculo" value="#{veiculoControl.fatorVeiculo}"
+										lang="pt-br" decimalPlaces="2" 
+										decimalSeparator="," 
+										thousandSeparator=".">
+						</pe:inputNumber>	
+						
+            		</h:panelGrid>   
+            		
+            		<p:spacer height="3"/>
+            		
+            		<p:panel style="border: 0px;">
+            		
+	            		<p:commandButton value="Cadastrar Veiculo" update="@form" 
+	          						     id="btCadastrar" styleClass="signin-btn"
+										 style="font-weight: bold;"		
+										 rendered="#{veiculoControl.veiculoSelecionado == null or veiculoControl.veiculoSelecionado.id == null}"
+										 action="#{veiculoControl.cadastrarVeiculo()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+						<p:commandButton value="Alterar Veiculo" update="@form" 
+	          						     id="btAlterar" styleClass="signin-btn"
+										 style="font-weight: bold;"		
+										 rendered="#{veiculoControl.veiculoSelecionado != null and veiculoControl.veiculoSelecionado.id != null}"
+										 action="#{veiculoControl.alterarVeiculo()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+												
+						<p:spacer width="15"/>	
+							 		 
+						<p:commandButton value="Limpar" update="@form" 
+	          						     id="btLimpar" styleClass="signin-btn"
+										 style="font-weight: bold;"
+										 action="#{veiculoControl.init()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+								 		 
+						<p:spacer width="35"/>			 		 
+								 		 
+						<p:commandButton value="Excluir Veiculo" update="@form" 
+	          						     id="btExcluir" styleClass="signin-btn"
+										 style="font-weight: bold; color: red;"		
+										 rendered="#{veiculoControl.veiculoSelecionado != null and veiculoControl.veiculoSelecionado.id != null}"
+										 action="#{veiculoControl.excluirVeiculo()}"							 
+										 onstart="PF('dialogProcessando').show();" 
+										 oncomplete="PF('dialogProcessando').hide();"									
+									     onsuccess="PF('dialogProcessando').hide();"
+								 		 onerror="PF('dialogProcessando').hide();"/> 
+								 		 
+							 		 
+					</p:panel>
+					
+            	</p:panel>    
+            	
+            	<p:panel header="Veiculos Cadastrados" id="panelVeiculosCadastrados">              	       
+	            	
+	            	<p:dataTable value="#{veiculoControl.listaVeiculos}"
+								 id="tabelaVeiculosCadastrados" paginator="true"  										  
+	                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+	                             currentPageReportTemplate="Exibindo de {startRecord} a {endRecord} de {totalRecords} - Página: {currentPage}/{totalPages}"
+	                             emptyMessage="Nenhum registro a ser exibido"
+	                             rowIndexVar="rowIndex" reflow="true" var="item" rows="10" 
+	                             rowsPerPageTemplate="10,20,30,40,50"
+	                             selection="#{veiculoControl.veiculoSelecionado}"
+	                             selectionMode="single"  rowKey="#{item.id}">   
+	                              	 	                      
+	                      <p:column style="width: 10%; text-align: left;" sortBy="#{item.tipoVeiculo}">                        
+	                         <f:facet name="header">                           
+	                             <h:outputText value="Veiculo" />  
+	                         </f:facet>                          
+	                         <h:outputText value="#{item.tipoVeiculo}" />  
+	                      </p:column>
+	                      
+	                      <p:column style="width: 10%; text-align: center;" sortBy="#{item.fator}">                        
+	                         <f:facet name="header">                           
+	                             <h:outputText value="Fator multiplicador de custos" />  
+	                         </f:facet>                          
+	                         <h:outputText value="#{item.fator}" converter="decimal"/>  
+	                      </p:column>
+	                                            
+	                      <p:column style="width: 8%; text-align: center;"> 
+		                     <p:commandLink title="Selecionar" update="@form" 
+		                     				style="color: red; text-decoration: underline;"
+		                     				value="Selecionar" action="#{veiculoControl.selecionar()}">
+			                 	<f:setPropertyActionListener value="#{item}" target="#{veiculoControl.veiculoSelecionado}"/>	                      
+		                     </p:commandLink> 
+	                      </p:column>
+	                                    
+	                </p:dataTable>  
+                </p:panel>    
+            	 			
+            </h:form>
+            
+        </ui:define>
+
+    </ui:composition>
+    
+</h:body>
+
+</html>
