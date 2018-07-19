@@ -9,5 +9,5 @@ import javax.ejb.Local;
 
 @Local
 public abstract interface CalculoCustosServiceLocal extends GenericServiceInterface {
-	public abstract CalculoCustosDTO calcularCustos(List<Via> listasVias, Veiculo veiculoUtilizado, Integer cargaTransportada);
+	public CalculoCustosDTO calcularCustos(List<Via> listasVias, Veiculo veiculoUtilizado, Integer cargaTransportada);
 }

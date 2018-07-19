@@ -38,8 +38,8 @@ public class VeiculoControl extends BaseControl {
 		veiculoSelecionado.setTipoVeiculo(tipoVeiculo);
 		veiculoSelecionado.setFator(fatorVeiculo);
 
-		if ((veiculoSelecionado.getFator() == null) || (veiculoSelecionado.getFator().doubleValue() == 0.0D)) {
-			addErrorMessage("Informe o fator multiplicador do veículo");
+		if ((veiculoSelecionado.getFator() == null) || (veiculoSelecionado.getFator().doubleValue() <= 0.0)) {
+			addErrorMessage("Informe um fator multiplicador do veículo válido");
 			return null;
 		}
 
@@ -61,6 +61,9 @@ public class VeiculoControl extends BaseControl {
 		idVeiculo = veiculoSelecionado.getId();
 		tipoVeiculo = veiculoSelecionado.getTipoVeiculo();
 		fatorVeiculo = veiculoSelecionado.getFator();
+		if(fatorVeiculo <= 0){
+			fatorVeiculo = 0.0;
+		}
 
 		return null;
 	}
@@ -70,8 +73,8 @@ public class VeiculoControl extends BaseControl {
 		veiculoSelecionado.setTipoVeiculo(tipoVeiculo.trim());
 		veiculoSelecionado.setFator(fatorVeiculo);
 
-		if ((veiculoSelecionado.getFator() == null) || (veiculoSelecionado.getFator().doubleValue() == 0.0D)) {
-			addErrorMessage("Informe o fator multiplicador do veículo");
+		if ((veiculoSelecionado.getFator() == null) || (veiculoSelecionado.getFator().doubleValue() <= 0.0)) {
+			addErrorMessage("Informe um fator multiplicador do veículo válido");
 			return null;
 		}
 

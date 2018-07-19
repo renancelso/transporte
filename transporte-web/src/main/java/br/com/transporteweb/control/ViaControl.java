@@ -38,8 +38,8 @@ public class ViaControl extends BaseControl {
 		viaSelecionada.setTipoVia(tipoVia.trim());
 		viaSelecionada.setCustoKM(custoKM);
 
-		if ((viaSelecionada.getCustoKM() == null) || (viaSelecionada.getCustoKM().doubleValue() == 0.0D)) {
-			addErrorMessage("Informe o custo do KM rodado.");
+		if ((viaSelecionada.getCustoKM() == null) || (viaSelecionada.getCustoKM().doubleValue() <= 0.0)) {
+			addErrorMessage("Informe um custo do KM rodado válido.");
 			return null;
 		}
 
@@ -60,8 +60,10 @@ public class ViaControl extends BaseControl {
 	public String selecionar() {
 		idVia = viaSelecionada.getId();
 		tipoVia = viaSelecionada.getTipoVia();
-		custoKM = viaSelecionada.getCustoKM();
-
+		custoKM = viaSelecionada.getCustoKM();		
+		if(custoKM <= 0){
+			custoKM = 0.0;
+		}
 		return null;
 	}
 
@@ -70,8 +72,8 @@ public class ViaControl extends BaseControl {
 		viaSelecionada.setTipoVia(tipoVia.trim());
 		viaSelecionada.setCustoKM(custoKM);
 
-		if ((viaSelecionada.getCustoKM() == null) || (viaSelecionada.getCustoKM().doubleValue() == 0.0D)) {
-			addErrorMessage("Informe o custo do KM rodado.");
+		if ((viaSelecionada.getCustoKM() == null) || (viaSelecionada.getCustoKM().doubleValue() <= 0.0)) {
+			addErrorMessage("Informe um custo do KM rodado válido");
 			return null;
 		}
 

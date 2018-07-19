@@ -14,6 +14,7 @@ import br.com.transporteweb.service.calculos.CalculoCustos;
 public class CalculoCustosService extends GenericService implements CalculoCustosServiceLocal {
 	private static final long serialVersionUID = -4662964465441955320L;
 	
+	@Override
 	public CalculoCustosDTO calcularCustos(List<Via> listaVias, Veiculo veiculoUtilizado, Integer cargaTransportada) {
 		CalculoCustos calculo = new CalculoCustos();		
 		return calculo.calcularCustos(listaVias, veiculoUtilizado, cargaTransportada);
