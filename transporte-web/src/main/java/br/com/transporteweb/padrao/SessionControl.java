@@ -20,9 +20,8 @@ import org.apache.log4j.Logger;
 public class SessionControl extends BaseControl {
 	
 	private static final long serialVersionUID = 7314625690695764468L;
-
-	@Inject
-	protected Logger log;
+	
+	protected Logger log = Logger.getLogger(SessionControl.class.getName());
 	
 	/**
 	 *

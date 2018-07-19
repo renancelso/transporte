@@ -4,21 +4,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
@@ -29,8 +23,7 @@ public class BaseControl implements Serializable{
 	
 	private static final long serialVersionUID = 6653407730404794541L;
 
-	@Inject
-	protected transient Logger log;
+	protected transient Logger log = Logger.getLogger(BaseControl.class.getName());
 	
 	public BaseControl() {
 		Locale.setDefault(new Locale("pt", "BR"));	

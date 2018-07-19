@@ -22,8 +22,8 @@ import org.apache.log4j.PropertyConfigurator;
 @ApplicationScoped
 public class ApplicationControl {
 	
-	@Inject
-	protected Logger log;			
+	
+	protected Logger log = Logger.getLogger(ApplicationControl.class.getName());			
 	private Date dataHoraInicio;
 	
 	@PostConstruct
