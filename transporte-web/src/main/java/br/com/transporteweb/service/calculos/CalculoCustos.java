@@ -22,6 +22,10 @@ public class CalculoCustos implements Serializable{
 		
 		for (Via via : listaVias) {
 			
+			if(via.getDistanciaPercorrida() == null){
+				via.setDistanciaPercorrida(Long.valueOf(0));					
+			}
+			
 			Double custoVia = via.getDistanciaPercorrida() == null ? 0.0 : via.getDistanciaPercorrida()
 							   * via.getCustoKM() * veiculoUtilizado.getFator();
 			

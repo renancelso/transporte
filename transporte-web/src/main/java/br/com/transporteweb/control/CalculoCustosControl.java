@@ -49,6 +49,12 @@ public class CalculoCustosControl extends BaseControl {
 			return null;
 		}
 		
+		for (Via via : listasVias) {
+			if(via.getDistanciaPercorrida() == null){
+				via.setDistanciaPercorrida(Long.valueOf(0));				
+			}
+		}
+		
 		if(veiculoUtilizado == null){
 			addErrorMessage("Informe um veículo utilizado");	
 			return null;
