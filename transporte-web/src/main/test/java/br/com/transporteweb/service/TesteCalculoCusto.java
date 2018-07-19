@@ -5,39 +5,17 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.transporteweb.model.Veiculo;
 import br.com.transporteweb.model.Via;
+import br.com.transporteweb.service.calculos.CalculoCustos;
 
 @RunWith(Arquillian.class)
-public class TesteCalculoCusto {
+public class TesteCalculoCusto {		
 	
-	@Inject
-	private CalculoCustosServiceLocal calculoCustosService;
-
-	@Deployment
-	public static JavaArchive createDeployment() {
-//		return ShrinkWrap.create(ZipImporter.class, "transporte-web.war")
-//				.importFrom(new File("target/transporte-web.war"))
-//				.as(WebArchive.class);
-		
-		JavaArchive jar = ShrinkWrap.create(JavaArchive.class).addClass(CalculoCustosServiceLocal.class)
-		        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-		
-		System.out.println(jar.toString(true));
-		
-		return jar;
-	}
-
 	@Test
 	public final void testCalcularCustos() {
 		List<Via> listasVias = new ArrayList<Via>();
@@ -47,14 +25,14 @@ public class TesteCalculoCusto {
 		viaPavimentada.setTipoVia("Via pavimentada");
 		viaPavimentada.setCustoKM(0.54);
 		viaPavimentada.setDistanciaPercorrida(Long.valueOf(80));
-
+		listasVias.add(viaPavimentada);		
+		
 		Via viaNaoPavimentada = new Via();
 		viaNaoPavimentada.setId(Long.valueOf(2));
-		viaPavimentada.setTipoVia("Via não-pavimentada");
-		viaPavimentada.setCustoKM(0.62);
-		viaPavimentada.setDistanciaPercorrida(Long.valueOf(20));
-
-		listasVias.add(viaPavimentada);
+		viaNaoPavimentada.setTipoVia("Via não-pavimentada");
+		viaNaoPavimentada.setCustoKM(0.62);
+		viaNaoPavimentada.setDistanciaPercorrida(Long.valueOf(20));
+		
 		listasVias.add(viaNaoPavimentada);
 
 		Veiculo veiculoUtilizado = new Veiculo();
@@ -64,11 +42,12 @@ public class TesteCalculoCusto {
 
 		Integer cargaTransportada = 6;
 
-		Double expected = 57.60;
+		Double valorEsperado = 57.60;
 
-		assertEquals(expected, calculoCustosService.calcularCustos(listasVias, 
-																   veiculoUtilizado, 
-																   cargaTransportada).getCustoTransporte());
+		CalculoCustos calculo = new CalculoCustos();
+		assertEquals(valorEsperado, calculo.calcularCustos(listasVias, 
+													  	   veiculoUtilizado, 
+													  	   cargaTransportada).getCustoTransporte());		
 	}
 
 }
